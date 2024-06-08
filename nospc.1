@@ -4,13 +4,16 @@ nospc \- detect and highlight non-ASCII whitespace characters
 
 .SH SYNOPSIS
 .B nospc
-[\fI--highlight\fR \fItype\fR] \fIfilename\fR...
+[\fI-v|--verbose\fR] [\fI--highlight\fR \fItype\fR] \fIfilename\fR...
 
 .SH DESCRIPTION
 .B nospc
 is a utility to detect and highlight non-ASCII whitespace characters in text files. It supports highlighting using either colored text or enclosing characters in brackets.
 
 .SH OPTIONS
+.TP
+.B \-v, \--verbose
+Enable verbose output. This provide unicode codepoint and name of the character in "[U+xxxx CHAR NAME]".
 .TP
 .B \--highlight \fItype\fR
 Specify the highlighting method. Possible values are:
