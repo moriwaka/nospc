@@ -31,7 +31,7 @@ nospc is a utility to detect and highlight non-ASCII whitespace characters in te
 To run nospc with a single file:
 
 ```sh
-python nospc.py <filename>
+nospc.py <filename>
 ```
 
 ### Multiple Files
@@ -39,7 +39,7 @@ python nospc.py <filename>
 To run nospc with multiple files:
 
 ```sh
-python nospc.py <filename1> <filename2> ...
+nospc.py <filename1> <filename2> ...
 ```
 
 ### Standard Input
@@ -47,7 +47,7 @@ python nospc.py <filename1> <filename2> ...
 To run nospc with standard input:
 
 ```sh
-cat somefile.txt | python nospc.py -
+cat somefile.txt | nospc.py -
 ```
 
 ### Highlighting Options
@@ -57,38 +57,22 @@ You can choose between two highlighting methods: `color` (default) and `brackets
 #### Using Colored Text
 
 ```sh
-python nospc.py --highlight color <filename>
+nospc.py <filename>
 ```
 
-#### Using Brackets with Unicode Information
+#### Using Brackets 
 
 ```sh
-python nospc.py --highlight brackets <filename>
+nospc.py --highlight brackets <filename>
 ```
 
-## Examples
+### Unicode Information
 
-### Detect and highlight non-ASCII whitespace characters in a file using colored text:
+You can show unicode information like: U+xxxx CHAR NAME
 
 ```sh
-python nospc.py file.txt
+nospc.py -v <filename>
+nospc.py -v --highlight brackets <filename>
 ```
 
-### Detect and highlight non-ASCII whitespace characters in a file using brackets:
-
-```sh
-python nospc.py --highlight brackets file.txt
-```
-
-### Read from standard input and highlight using colored text:
-
-```sh
-cat file.txt | python nospc.py -
-```
-
-### Read from standard input and highlight using brackets:
-
-```sh
-cat file.txt | python nospc.py --highlight brackets -
-```
 
