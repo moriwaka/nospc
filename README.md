@@ -5,16 +5,17 @@ nospc is a utility to detect and highlight non-ASCII whitespace characters in te
 ## Features
 
 - Detects non-ASCII whitespace characters
-- Supports multiple input files
+- Supports multiple input files and directories
 - Supports standard input
 - Highlighting methods:
   - Colored text
-  - Enclosing characters in brackets with Unicode character information
+  - Enclosing characters in brackets with Unicode information
+- Recursive directory processing
 
 ## Requirements
 
 - Python 3.x
-- termcolor library
+- `termcolor` library
 
 ## Installation
 
@@ -31,7 +32,7 @@ nospc is a utility to detect and highlight non-ASCII whitespace characters in te
 To run nospc with a single file:
 
 ```sh
-nospc.py <filename>
+python nospc.py <filename>
 ```
 
 ### Multiple Files
@@ -39,7 +40,7 @@ nospc.py <filename>
 To run nospc with multiple files:
 
 ```sh
-nospc.py <filename1> <filename2> ...
+python nospc.py <filename1> <filename2> ...
 ```
 
 ### Standard Input
@@ -47,32 +48,63 @@ nospc.py <filename1> <filename2> ...
 To run nospc with standard input:
 
 ```sh
-cat somefile.txt | nospc.py -
+cat somefile.txt | python nospc.py -
+```
+
+### Recursive Directory Processing
+
+To run nospc and process directories recursively:
+
+```sh
+python nospc.py -r <directory>
 ```
 
 ### Highlighting Options
 
-You can choose between two highlighting methods: `color` (default) and `brackets`.
+You can choose between two highlighting methods: color and brackets. By default, if the output is a TTY, color highlighting is enabled. If the output is not a TTY, bracket highlighting is enabled.
 
 #### Using Colored Text
 
+To enable color highlighting:
+
 ```sh
-nospc.py <filename>
+python nospc.py -c <filename>
 ```
 
-#### Using Brackets 
+#### Using Brackets with Unicode Information
+
+To enable bracket highlighting:
 
 ```sh
-nospc.py --highlight brackets <filename>
+python nospc.py -b <filename>
 ```
 
-### Unicode Information
+#### Using Both Highlighting Methods
 
-You can show unicode information like: U+xxxx CHAR NAME
+To enable both color and bracket highlighting:
 
 ```sh
-nospc.py -v <filename>
-nospc.py -v --highlight brackets <filename>
+python nospc.py -c -b <filename>
+```
+
+## Examples
+
+### Detect and highlight non-ASCII whitespace characters in a file using colored text:
+
+```sh
+python nospc.py -c file.txt
+```
+
+### Detect and highlight non-ASCII whitespace characters in a file using brackets:
+
+```sh
+python nospc.py -b file.txt
+```
+
+### Process a directory recursively and highlight using both methods:
+
+```sh
+python nospc.py -r -c -b directory_name
 ```
 
 
