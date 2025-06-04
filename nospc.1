@@ -4,7 +4,7 @@ nospc \- detect and highlight non-ASCII whitespace characters
 
 .SH SYNOPSIS
 .B nospc
-[\fI-v|--verbose\fR] [\fI--highlight\fR \fItype\fR] \fIfilename\fR...
+[\fI-c|--color\fR] [\fI-b|--bracket\fR] [\fI-r|--recursive\fR] \fIfilename\fR...
 
 .SH DESCRIPTION
 .B nospc
@@ -12,17 +12,14 @@ is a utility to detect and highlight non-ASCII whitespace characters in text fil
 
 .SH OPTIONS
 .TP
-.B \-v, \--verbose
-Enable verbose output. This provide unicode codepoint and name of the character in "[U+xxxx CHAR NAME]".
+.B \-c, \--color
+Enable color highlighting.
 .TP
-.B \--highlight \fItype\fR
-Specify the highlighting method. Possible values are:
-.RS
-.IP "color" 10
-Highlight non-ASCII whitespace characters using colored text (default).
-.IP "brackets" 10
-Enclose non-ASCII whitespace characters in ">>> <<<".
-.RE
+.B \-b, \--bracket
+Enable bracket highlighting with Unicode information.
+.TP
+.B \-r, \--recursive
+Recursively process directories.
 
 .SH ARGUMENTS
 .TP
@@ -34,28 +31,28 @@ One or more input filenames. Use "-" to read from standard input.
 Detect and highlight non-ASCII whitespace characters in a file using colored text:
 .RS
 .nf
-.B nospc file.txt
+.B nospc -c file.txt
 .RE
 .fi
 .TP
 Detect and highlight non-ASCII whitespace characters in a file using brackets:
 .RS
 .nf
-.B nospc --highlight brackets file.txt
+.B nospc -b file.txt
 .RE
 .fi
 .TP
 Read from standard input and highlight using colored text:
 .RS
 .nf
-.B cat file.txt | nospc -
+.B cat file.txt | nospc -c -
 .RE
 .fi
 .TP
 Read from standard input and highlight using brackets:
 .RS
 .nf
-.B cat file.txt | nospc --highlight brackets -
+.B cat file.txt | nospc -b -
 .RE
 .fi
 
