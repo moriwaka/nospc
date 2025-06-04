@@ -34,7 +34,7 @@ def highlight_non_standard_whitespace(line, use_color, use_bracket):
 
 def filter_non_standard_whitespace(file, filename, use_color, use_bracket):
     for line_number, line in enumerate(file, 1):
-        highlighted_line, line_found_non_standard = highlight_non_standard_whitespace(line.strip(), use_color, use_bracket)
+        highlighted_line, line_found_non_standard = highlight_non_standard_whitespace(line.rstrip('\n'), use_color, use_bracket)
         if line_found_non_standard:
             print(f"{filename}:{line_number}:{highlighted_line}")
 
