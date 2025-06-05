@@ -6,7 +6,7 @@ import sys
 import argparse
 try:
     from termcolor import colored
-except Exception:  # pragma: no cover - fallback if termcolor is missing
+except ImportError:  # pragma: no cover - fallback if termcolor is missing
     def colored(text, *_, **__):
         return text
 import unicodedata
