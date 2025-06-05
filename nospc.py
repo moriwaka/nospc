@@ -4,7 +4,11 @@ import os
 import re
 import sys
 import argparse
-from termcolor import colored
+try:
+    from termcolor import colored
+except Exception:  # pragma: no cover - fallback if termcolor is missing
+    def colored(text, *_, **__):
+        return text
 import unicodedata
 
 all_whitespace_pattern = re.compile(r'\s')
