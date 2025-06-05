@@ -1,6 +1,6 @@
 .TH NOSPC 1 "June 2024" "nospc 1.0" "User Commands"
 .SH NAME
-nospc \- detect and highlight non-ASCII whitespace characters
+nospc \- detect and highlight whitespace characters other than the ASCII space and tab
 
 .SH SYNOPSIS
 .B nospc
@@ -8,7 +8,7 @@ nospc \- detect and highlight non-ASCII whitespace characters
 
 .SH DESCRIPTION
 .B nospc
-is a utility to detect and highlight non-ASCII whitespace characters in text files. It supports highlighting using either colored text or enclosing characters in brackets.
+is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It supports highlighting using either colored text or enclosing characters in brackets.
 
 .SH OPTIONS
 .TP
@@ -28,14 +28,14 @@ One or more input filenames. Use "-" to read from standard input.
 
 .SH EXAMPLES
 .TP
-Detect and highlight non-ASCII whitespace characters in a file using colored text:
+Detect and highlight whitespace characters other than the ASCII space and tab in a file using colored text:
 .RS
 .nf
 .B nospc -c file.txt
 .RE
 .fi
 .TP
-Detect and highlight non-ASCII whitespace characters in a file using brackets:
+Detect and highlight whitespace characters other than the ASCII space and tab in a file using brackets:
 .RS
 .nf
 .B nospc -b file.txt

@@ -61,7 +61,7 @@ def process_directory(directory, use_color, use_bracket):
             process_file(filepath, use_color, use_bracket)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Detect and highlight non-ASCII whitespace characters.")
+    parser = argparse.ArgumentParser(description="Detect and highlight whitespace characters other than the ASCII space and tab.")
     parser.add_argument('filenames', metavar='N', type=str, nargs='+', help='Input file names or directories')
     parser.add_argument('-c', '--color', action='store_true', help='Enable color highlighting')
     parser.add_argument('-b', '--bracket', action='store_true', help='Enable bracket highlighting with Unicode information')
