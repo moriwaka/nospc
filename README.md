@@ -1,10 +1,10 @@
 # nospc
 
-nospc is a utility to detect and highlight non-ASCII whitespace characters in text files. It supports highlighting using either colored text or enclosing characters in brackets with Unicode character information.
+nospc is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It supports highlighting using either colored text or enclosing characters in brackets with Unicode character information.
 
 ## Features
 
-- Detects non-ASCII whitespace characters
+- Detects whitespace characters other than ASCII space and tab
 - Supports multiple input files and directories
 - Supports standard input
 - Highlighting methods:
@@ -89,13 +89,13 @@ python nospc.py -c -b <filename>
 
 ## Examples
 
-### Detect and highlight non-ASCII whitespace characters in a file using colored text:
+### Detect and highlight whitespace characters other than ASCII space and tab in a file using colored text:
 
 ```sh
 python nospc.py -c file.txt
 ```
 
-### Detect and highlight non-ASCII whitespace characters in a file using brackets:
+### Detect and highlight whitespace characters other than ASCII space and tab in a file using brackets:
 
 ```sh
 python nospc.py -b file.txt
