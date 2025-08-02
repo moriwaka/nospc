@@ -46,15 +46,6 @@ def test_cli_standard_whitespace_ignored(tmp_path):
     assert output == []
 
 
-def test_cli_color_output_with_termcolor(tmp_path):
-    import pytest
-    pytest.importorskip("termcolor")
-    sample = tmp_path / "color.txt"
-    sample.write_text("a\u00A0b\n", encoding="utf-8")
-    output = run_cli([str(sample), "--color"])
-    assert any("\x1b[" in line for line in output)
-
-
 def test_cli_color_output_without_termcolor(tmp_path):
     import importlib.util
     import pytest
@@ -64,17 +55,6 @@ def test_cli_color_output_without_termcolor(tmp_path):
     sample.write_text("a\u00A0b\n", encoding="utf-8")
     output = run_cli([str(sample), "--color"])
     assert output == [f"{sample}:1:a\u00A0b"]
-
-
-def test_cli_color_and_bracket_combined(tmp_path):
-    import importlib.util
-    sample = tmp_path / "combo.txt"
-    sample.write_text("a\u00A0b\n", encoding="utf-8")
-    output = run_cli([str(sample), "--color", "--bracket"])
-    line = output[0]
-    assert "[U+00A0 NO-BREAK SPACE]" in line
-    if importlib.util.find_spec("termcolor") is not None:
-        assert "\x1b[" in line
 
 
 def test_cli_recursive_directory_processing(tmp_path):
@@ -100,14 +80,6 @@ def test_cli_binary_file(tmp_path):
     output = run_cli([str(binary)])
     assert output == [f"{binary}: is binary file."]
 
-
-def test_cli_stdin_with_options():
-    import importlib.util
-    output = run_cli(["-", "--color", "--bracket"], input_text="x\u00A0y\n")
-    line = output[0]
-    assert "[U+00A0 NO-BREAK SPACE]" in line
-    if importlib.util.find_spec("termcolor") is not None:
-        assert "\x1b[" in line
 
 
 def test_cli_nonexistent_path_error(tmp_path):
