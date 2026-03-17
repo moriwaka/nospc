@@ -1,10 +1,12 @@
 # nospc
 
-nospc is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It supports highlighting using either colored text or enclosing characters in brackets with Unicode character information.
+nospc is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It reports carriage returns (`\r`) and other non-standard whitespace within each input line, while line feeds (`\n`) are treated as line separators.
 
 ## Features
 
-- Detects whitespace characters other than ASCII space and tab
+- Detects whitespace characters other than ASCII space and tab within each input line
+- Reports carriage return (`\r`) while treating line feed (`\n`) as the line separator
+- Supports `--crlf` to ignore carriage return only when it is part of a `CRLF` line ending
 - Supports multiple input files and directories
 - Supports standard input
 - Highlighting methods:
@@ -44,7 +46,7 @@ To run nospc with a single file:
 nospc <filename>
 ```
 
-`nospc` reads files as UTF-8. Files that cannot be decoded as UTF-8 are reported as `is binary file.`
+`nospc` reads files as UTF-8. Files that cannot be decoded as UTF-8 are reported as `is binary file.` Line feeds (`\n`) delimit lines and are not reported; carriage returns (`\r`) inside those lines are reported. With `--crlf`, a carriage return is ignored only when it appears immediately before the line feed in a `CRLF` ending.
 
 ### Multiple Files
 
@@ -68,6 +70,14 @@ To run nospc and process directories recursively:
 
 ```sh
 nospc -r <directory>
+```
+
+### CRLF Handling
+
+To ignore carriage return only when it is part of a `CRLF` line ending:
+
+```sh
+nospc --crlf <filename>
 ```
 
 ### Highlighting Options
@@ -100,13 +110,13 @@ nospc -c -b <filename>
 
 ## Examples
 
-### Detect and highlight whitespace characters other than ASCII space and tab in a file using colored text:
+### Detect and highlight whitespace characters other than the ASCII space and tab in a file using colored text:
 
 ```sh
 nospc -c file.txt
 ```
 
-### Detect and highlight whitespace characters other than ASCII space and tab in a file using brackets:
+### Detect and highlight whitespace characters other than the ASCII space and tab in a file using brackets:
 
 ```sh
 nospc -b file.txt
@@ -116,4 +126,10 @@ nospc -b file.txt
 
 ```sh
 nospc -r -c -b directory_name
+```
+
+### Ignore carriage return only in CRLF line endings:
+
+```sh
+nospc --crlf file.txt
 ```

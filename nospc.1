@@ -4,14 +4,14 @@ nospc \- detect and highlight whitespace characters other than the ASCII space a
 
 .SH SYNOPSIS
 .B nospc
-[\fI-c|--color\fR] [\fI-b|--bracket\fR] [\fI-r|--recursive\fR] \fIfilename\fR...
+[\fI-c|--color\fR] [\fI-b|--bracket\fR] [\fI-r|--recursive\fR] [\fI--crlf\fR] \fIfilename\fR...
 
 .SH DESCRIPTION
 .B nospc
-is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It supports highlighting using either colored text or enclosing characters in brackets.
+is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It reports carriage returns (\er) and other non-standard whitespace within each input line, while line feeds (\en) are treated as line separators. It supports highlighting using either colored text or enclosing characters in brackets.
 
 .PP
-Input files are read as UTF-8. Files that cannot be decoded as UTF-8 are reported as binary files.
+Input files are read as UTF-8. Files that cannot be decoded as UTF-8 are reported as binary files. Line feeds (\en) delimit lines and are not reported; carriage returns (\er) inside those lines are reported. With \fB--crlf\fR, a carriage return is ignored only when it appears immediately before the line feed in a CRLF ending.
 
 .SH OPTIONS
 .TP
@@ -23,6 +23,9 @@ Enable bracket highlighting with Unicode information.
 .TP
 .B \-r, \--recursive
 Recursively process directories.
+.TP
+.B \--crlf
+Ignore carriage returns only when they are part of CRLF line endings.
 
 .SH ARGUMENTS
 .TP
@@ -56,5 +59,12 @@ Read from standard input and highlight using brackets:
 .RS
 .nf
 .B cat file.txt | nospc -b -
+.RE
+.fi
+.TP
+Ignore carriage return only when it is part of a CRLF line ending:
+.RS
+.nf
+.B nospc --crlf file.txt
 .RE
 .fi

@@ -53,6 +53,23 @@ def test_cli_standard_whitespace_ignored(tmp_path):
     assert output == []
 
 
+def test_cli_carriage_return_is_reported_but_line_feed_is_not(tmp_path):
+    sample = tmp_path / "crlf.txt"
+    sample.write_bytes(b"a\r\nb\r")
+    output = run_cli([str(sample)])
+    assert output == [
+        f"{sample}:1:a[U+000D CARRIAGE RETURN]",
+        f"{sample}:2:b[U+000D CARRIAGE RETURN]",
+    ]
+
+
+def test_cli_crlf_option_ignores_cr_only_in_crlf_endings(tmp_path):
+    sample = tmp_path / "crlf.txt"
+    sample.write_bytes(b"a\r\nb\r")
+    output = run_cli(["--crlf", str(sample)])
+    assert output == [f"{sample}:2:b[U+000D CARRIAGE RETURN]"]
+
+
 def test_cli_color_output_without_termcolor(tmp_path):
     import importlib.util
     import pytest
