@@ -3,6 +3,7 @@
 import os
 import re
 import sys
+import io
 import argparse
 try:
     from termcolor import colored
@@ -85,6 +86,22 @@ def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
             succeeded = process_file(filepath, use_color, use_bracket, ignore_crlf) and succeeded
     return succeeded
 
+def process_stdin(use_color, use_bracket, ignore_crlf=False):
+    stdin = io.TextIOWrapper(
+        sys.stdin.buffer,
+        encoding='utf-8',
+        errors='strict',
+        newline='',
+    )
+    try:
+        filter_non_standard_whitespace(stdin, "-", use_color, use_bracket, ignore_crlf)
+        return True
+    except UnicodeDecodeError:
+        print("-: is binary file.", file=sys.stderr)
+        return False
+    finally:
+        stdin.detach()
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Detect and highlight whitespace characters other than the ASCII space and tab.")
     parser.add_argument('filenames', metavar='N', type=str, nargs='+', help='Input file names or directories')
@@ -103,9 +120,7 @@ def main(argv=None):
 
     for filename in filenames:
         if filename == "-":
-            if hasattr(sys.stdin, 'reconfigure'):
-                sys.stdin.reconfigure(newline='')
-            filter_non_standard_whitespace(sys.stdin, "-", use_color, use_bracket, ignore_crlf)
+            succeeded = process_stdin(use_color, use_bracket, ignore_crlf) and succeeded
         else:
             if os.path.isdir(filename):
                 if recursive:

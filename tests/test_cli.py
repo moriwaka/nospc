@@ -18,6 +18,15 @@ def run_cli(args, input_text=None):
     )
 
 
+def run_cli_bytes(args, input_bytes=None):
+    return subprocess.run(
+        [sys.executable, str(SCRIPT)] + args,
+        input=input_bytes,
+        capture_output=True,
+        cwd=REPO_ROOT,
+    )
+
+
 def test_cli_file(tmp_path):
     sample = tmp_path / "sample.txt"
     sample.write_text("a\u00A0b\n", encoding="utf-8")
@@ -135,6 +144,14 @@ def test_cli_non_utf8_text_is_reported_as_binary(tmp_path):
     assert result.stdout == ""
     output = result.stderr.strip().splitlines()
     assert output == [f"{non_utf8}: is binary file."]
+
+
+def test_cli_non_utf8_stdin_is_reported_as_binary():
+    result = run_cli_bytes(["-"], input_bytes=b"a\xa0b\n")
+    assert result.returncode == 1
+    assert result.stdout == b""
+    output = result.stderr.decode("utf-8").strip().splitlines()
+    assert output == ["-: is binary file."]
 
 
 
