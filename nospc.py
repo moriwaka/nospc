@@ -68,18 +68,22 @@ def process_file(filename, use_color, use_bracket, ignore_crlf=False):
     try:
         with open(filename, 'r', encoding='utf-8', newline='') as file:
             filter_non_standard_whitespace(file, filename, use_color, use_bracket, ignore_crlf)
+        return True
     except UnicodeDecodeError:
-        print(f"{filename}: is binary file.")
+        print(f"{filename}: is binary file.", file=sys.stderr)
     except IsADirectoryError:
-        print(f"{filename}: is not a regular file.")
+        print(f"{filename}: is not a regular file.", file=sys.stderr)
     except Exception as e:
-        print(f"{filename}: could not be processed. ({str(e)})")
+        print(f"{filename}: could not be processed. ({str(e)})", file=sys.stderr)
+    return False
 
 def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
+    succeeded = True
     for root, _, files in os.walk(directory):
         for name in files:
             filepath = os.path.join(root, name)
-            process_file(filepath, use_color, use_bracket, ignore_crlf)
+            succeeded = process_file(filepath, use_color, use_bracket, ignore_crlf) and succeeded
+    return succeeded
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Detect and highlight whitespace characters other than the ASCII space and tab.")
@@ -95,6 +99,7 @@ def main(argv=None):
     use_bracket = args.bracket or (not sys.stdout.isatty() and not args.color)
     recursive = args.recursive
     ignore_crlf = args.crlf
+    succeeded = True
 
     for filename in filenames:
         if filename == "-":
@@ -104,11 +109,13 @@ def main(argv=None):
         else:
             if os.path.isdir(filename):
                 if recursive:
-                    process_directory(filename, use_color, use_bracket, ignore_crlf)
+                    succeeded = process_directory(filename, use_color, use_bracket, ignore_crlf) and succeeded
                 else:
-                    print(f"{filename}: is not a regular file.")
+                    print(f"{filename}: is not a regular file.", file=sys.stderr)
+                    succeeded = False
             else:
-                process_file(filename, use_color, use_bracket, ignore_crlf)
+                succeeded = process_file(filename, use_color, use_bracket, ignore_crlf) and succeeded
+    return 0 if succeeded else 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
