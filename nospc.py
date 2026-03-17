@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 import os
 import re
@@ -14,6 +14,21 @@ import unicodedata
 all_whitespace_pattern = re.compile(r'\s')
 
 exclude_chars = [' ', '\t']
+ascii_whitespace_names = {
+    '\v': "VERTICAL TAB",
+    '\f': "FORM FEED",
+    '\x1c': "FILE SEPARATOR",
+    '\x1d': "GROUP SEPARATOR",
+    '\x1e': "RECORD SEPARATOR",
+    '\x1f': "UNIT SEPARATOR",
+}
+
+def describe_whitespace(char):
+    try:
+        name = unicodedata.name(char)
+    except ValueError:
+        name = ascii_whitespace_names.get(char, "UNNAMED")
+    return f"U+{ord(char):04X} {name}"
 
 def highlight_non_standard_whitespace(line, use_color, use_bracket):
     highlighted_line = ''
@@ -27,7 +42,7 @@ def highlight_non_standard_whitespace(line, use_color, use_bracket):
             start, end = match.span()
             highlighted_space = line[start:end]
             if use_bracket:
-                unicode_info = f"U+{ord(char):04X} {unicodedata.name(char)}"
+                unicode_info = describe_whitespace(char)
                 highlighted_space = f"[{unicode_info}]"
             if use_color:
                 highlighted_space = colored(highlighted_space, 'red', attrs=['reverse', 'blink'])
@@ -60,14 +75,14 @@ def process_directory(directory, use_color, use_bracket):
             filepath = os.path.join(root, name)
             process_file(filepath, use_color, use_bracket)
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser(description="Detect and highlight whitespace characters other than the ASCII space and tab.")
     parser.add_argument('filenames', metavar='N', type=str, nargs='+', help='Input file names or directories')
     parser.add_argument('-c', '--color', action='store_true', help='Enable color highlighting')
     parser.add_argument('-b', '--bracket', action='store_true', help='Enable bracket highlighting with Unicode information')
     parser.add_argument('-r', '--recursive', action='store_true', help='Recursively process directories')
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     filenames = args.filenames
     use_color = args.color or (sys.stdout.isatty() and not args.bracket)
     use_bracket = args.bracket or (not sys.stdout.isatty() and not args.color)
@@ -85,3 +100,5 @@ if __name__ == "__main__":
             else:
                 process_file(filename, use_color, use_bracket)
 
+if __name__ == "__main__":
+    main()

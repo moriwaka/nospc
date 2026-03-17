@@ -15,15 +15,24 @@ nospc is a utility to detect and highlight whitespace characters other than the 
 ## Requirements
 
 - Python 3.x
-- `termcolor` library
+- UTF-8 encoded input files
+- `termcolor` for colorized output only
 
 ## Installation
 
-1. Clone the repository or download the script.
-2. Install the required library:
-   ```sh
-   pip install termcolor
-   ```
+Install from the repository root:
+
+```sh
+pip install .
+```
+
+If you want ANSI color output, install the optional color extra:
+
+```sh
+pip install '.[color]'
+```
+
+For local script usage without installation, you can still run `python nospc.py ...`.
 
 ## Usage
 
@@ -32,15 +41,17 @@ nospc is a utility to detect and highlight whitespace characters other than the 
 To run nospc with a single file:
 
 ```sh
-python nospc.py <filename>
+nospc <filename>
 ```
+
+`nospc` reads files as UTF-8. Files that cannot be decoded as UTF-8 are reported as `is binary file.`
 
 ### Multiple Files
 
 To run nospc with multiple files:
 
 ```sh
-python nospc.py <filename1> <filename2> ...
+nospc <filename1> <filename2> ...
 ```
 
 ### Standard Input
@@ -48,7 +59,7 @@ python nospc.py <filename1> <filename2> ...
 To run nospc with standard input:
 
 ```sh
-cat somefile.txt | python nospc.py -
+cat somefile.txt | nospc -
 ```
 
 ### Recursive Directory Processing
@@ -56,19 +67,19 @@ cat somefile.txt | python nospc.py -
 To run nospc and process directories recursively:
 
 ```sh
-python nospc.py -r <directory>
+nospc -r <directory>
 ```
 
 ### Highlighting Options
 
-You can choose between two highlighting methods: color and brackets. By default, if the output is a TTY, color highlighting is enabled. If the output is not a TTY, bracket highlighting is enabled.
+You can choose between two highlighting methods: color and brackets. By default, if the output is a TTY, color highlighting is enabled. If the output is not a TTY, bracket highlighting is enabled. If `termcolor` is not installed, `--color` falls back to plain text output instead of failing.
 
 #### Using Colored Text
 
 To enable color highlighting:
 
 ```sh
-python nospc.py -c <filename>
+nospc -c <filename>
 ```
 
 #### Using Brackets with Unicode Information
@@ -76,7 +87,7 @@ python nospc.py -c <filename>
 To enable bracket highlighting:
 
 ```sh
-python nospc.py -b <filename>
+nospc -b <filename>
 ```
 
 #### Using Both Highlighting Methods
@@ -84,7 +95,7 @@ python nospc.py -b <filename>
 To enable both color and bracket highlighting:
 
 ```sh
-python nospc.py -c -b <filename>
+nospc -c -b <filename>
 ```
 
 ## Examples
@@ -92,19 +103,17 @@ python nospc.py -c -b <filename>
 ### Detect and highlight whitespace characters other than ASCII space and tab in a file using colored text:
 
 ```sh
-python nospc.py -c file.txt
+nospc -c file.txt
 ```
 
 ### Detect and highlight whitespace characters other than ASCII space and tab in a file using brackets:
 
 ```sh
-python nospc.py -b file.txt
+nospc -b file.txt
 ```
 
 ### Process a directory recursively and highlight using both methods:
 
 ```sh
-python nospc.py -r -c -b directory_name
+nospc -r -c -b directory_name
 ```
-
-

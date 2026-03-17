@@ -10,10 +10,13 @@ nospc \- detect and highlight whitespace characters other than the ASCII space a
 .B nospc
 is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It supports highlighting using either colored text or enclosing characters in brackets.
 
+.PP
+Input files are read as UTF-8. Files that cannot be decoded as UTF-8 are reported as binary files.
+
 .SH OPTIONS
 .TP
 .B \-c, \--color
-Enable color highlighting.
+Enable color highlighting. If \fBtermcolor\fR is unavailable, output falls back to plain text.
 .TP
 .B \-b, \--bracket
 Enable bracket highlighting with Unicode information.
@@ -55,5 +58,3 @@ Read from standard input and highlight using brackets:
 .B cat file.txt | nospc -b -
 .RE
 .fi
-
-

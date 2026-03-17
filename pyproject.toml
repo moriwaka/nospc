@@ -1,2 +1,33 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nospc"
+version = "1.0.0"
+description = "Detect and highlight whitespace characters other than ASCII space and tab."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+authors = [
+  { name = "moriwaka" },
+]
+classifiers = [
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Text Processing",
+  "Topic :: Utilities",
+]
+
+[project.optional-dependencies]
+color = ["termcolor"]
+
+[project.scripts]
+nospc = "nospc:main"
+
+[tool.setuptools]
+py-modules = ["nospc"]
+
 [tool.pytest.ini_options]
 addopts = "-vv"

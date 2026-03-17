@@ -39,6 +39,13 @@ def test_cli_multiple_non_standard_whitespaces(tmp_path):
     assert output == [f"{sample}:1:A[U+00A0 NO-BREAK SPACE]B[U+2002 EN SPACE]C"]
 
 
+def test_cli_unnamed_non_standard_whitespace(tmp_path):
+    sample = tmp_path / "sample.txt"
+    sample.write_text("A\vB\n", encoding="utf-8")
+    output = run_cli([str(sample)])
+    assert output == [f"{sample}:1:A[U+000B VERTICAL TAB]B"]
+
+
 def test_cli_standard_whitespace_ignored(tmp_path):
     sample = tmp_path / "spaces.txt"
     sample.write_text(" \t\n", encoding="utf-8")
@@ -79,6 +86,13 @@ def test_cli_binary_file(tmp_path):
     binary.write_bytes(b"\x00\xff\x00")
     output = run_cli([str(binary)])
     assert output == [f"{binary}: is binary file."]
+
+
+def test_cli_non_utf8_text_is_reported_as_binary(tmp_path):
+    non_utf8 = tmp_path / "latin1.txt"
+    non_utf8.write_bytes(b"a\xa0b\n")
+    output = run_cli([str(non_utf8)])
+    assert output == [f"{non_utf8}: is binary file."]
 
 
 

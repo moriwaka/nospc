@@ -26,6 +26,25 @@ def test_multiple_non_standard_whitespaces_detected():
     assert highlighted == "a[U+00A0 NO-BREAK SPACE]b[U+2002 EN SPACE]c"
 
 
+def test_unnamed_non_standard_whitespace_detected():
+    line = "a\vb"
+    highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)
+    assert found
+    assert highlighted == "a[U+000B VERTICAL TAB]b"
+
+
+def test_ascii_control_separator_names_are_mapped():
+    line = "a\x1cb\x1dc\x1ed\x1fe"
+    highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)
+    assert found
+    assert highlighted == (
+        "a[U+001C FILE SEPARATOR]b"
+        "[U+001D GROUP SEPARATOR]c"
+        "[U+001E RECORD SEPARATOR]d"
+        "[U+001F UNIT SEPARATOR]e"
+    )
+
+
 def test_standard_whitespace_ignored():
     line = " \t"
     highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)
