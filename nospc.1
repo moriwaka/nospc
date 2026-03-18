@@ -11,7 +11,7 @@ nospc \- detect and highlight whitespace characters other than the ASCII space a
 is a utility to detect and highlight whitespace characters other than the ASCII space and tab in text files. It reports carriage returns (\er) and other non-standard whitespace within each input line, while line feeds (\en) are treated as line separators. It supports highlighting using either colored text or enclosing characters in brackets.
 
 .PP
-Input files are read as UTF-8. Files that cannot be decoded as UTF-8 are reported as binary files. Line feeds (\en) delimit lines and are not reported; carriage returns (\er) inside those lines are reported. With \fB--crlf\fR, a carriage return is ignored only when it appears immediately before the line feed in a CRLF ending.
+Input files are read as UTF-8. Files that cannot be decoded as UTF-8 are reported as not valid UTF-8 text. Line feeds (\en) delimit lines and are not reported; carriage returns (\er) inside those lines are reported. With \fB--crlf\fR, a carriage return is ignored only when it appears immediately before the line feed in a CRLF ending.
 
 .SH OPTIONS
 .TP

@@ -46,7 +46,7 @@ To run nospc with a single file:
 nospc <filename>
 ```
 
-`nospc` reads files as UTF-8. Files that cannot be decoded as UTF-8 are reported as `is binary file.` Line feeds (`\n`) delimit lines and are not reported; carriage returns (`\r`) inside those lines are reported. With `--crlf`, a carriage return is ignored only when it appears immediately before the line feed in a `CRLF` ending.
+`nospc` reads files as UTF-8. Files that cannot be decoded as UTF-8 are reported as `is not valid UTF-8 text.` Line feeds (`\n`) delimit lines and are not reported; carriage returns (`\r`) inside those lines are reported. With `--crlf`, a carriage return is ignored only when it appears immediately before the line feed in a `CRLF` ending.
 
 ### Multiple Files
 

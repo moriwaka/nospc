@@ -71,7 +71,7 @@ def process_file(filename, use_color, use_bracket, ignore_crlf=False):
             filter_non_standard_whitespace(file, filename, use_color, use_bracket, ignore_crlf)
         return True
     except UnicodeDecodeError:
-        print(f"{filename}: is binary file.", file=sys.stderr)
+        print(f"{filename}: is not valid UTF-8 text.", file=sys.stderr)
     except IsADirectoryError:
         print(f"{filename}: is not a regular file.", file=sys.stderr)
     except Exception as e:
@@ -97,7 +97,7 @@ def process_stdin(use_color, use_bracket, ignore_crlf=False):
         filter_non_standard_whitespace(stdin, "-", use_color, use_bracket, ignore_crlf)
         return True
     except UnicodeDecodeError:
-        print("-: is binary file.", file=sys.stderr)
+        print("-: is not valid UTF-8 text.", file=sys.stderr)
         return False
     finally:
         stdin.detach()

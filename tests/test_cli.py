@@ -133,7 +133,7 @@ def test_cli_binary_file(tmp_path):
     assert result.returncode == 1
     assert result.stdout == ""
     output = result.stderr.strip().splitlines()
-    assert output == [f"{binary}: is binary file."]
+    assert output == [f"{binary}: is not valid UTF-8 text."]
 
 
 def test_cli_non_utf8_text_is_reported_as_binary(tmp_path):
@@ -143,7 +143,7 @@ def test_cli_non_utf8_text_is_reported_as_binary(tmp_path):
     assert result.returncode == 1
     assert result.stdout == ""
     output = result.stderr.strip().splitlines()
-    assert output == [f"{non_utf8}: is binary file."]
+    assert output == [f"{non_utf8}: is not valid UTF-8 text."]
 
 
 def test_cli_non_utf8_stdin_is_reported_as_binary():
@@ -151,7 +151,7 @@ def test_cli_non_utf8_stdin_is_reported_as_binary():
     assert result.returncode == 1
     assert result.stdout == b""
     output = result.stderr.decode("utf-8").strip().splitlines()
-    assert output == ["-: is binary file."]
+    assert output == ["-: is not valid UTF-8 text."]
 
 
 
