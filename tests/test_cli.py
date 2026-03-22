@@ -61,6 +61,15 @@ def test_cli_zero_width_space(tmp_path):
     assert output == [f"{sample}:1:a[U+200B ZERO WIDTH SPACE]b"]
 
 
+def test_cli_utf8_bom_is_reported(tmp_path):
+    sample = tmp_path / "sample.txt"
+    sample.write_text("\uFEFFabc\n", encoding="utf-8")
+    result = run_cli([str(sample)])
+    assert result.returncode == 0
+    output = result.stdout.strip().splitlines()
+    assert output == [f"{sample}:1:[U+FEFF ZERO WIDTH NO-BREAK SPACE]abc"]
+
+
 def test_cli_unnamed_non_standard_whitespace(tmp_path):
     sample = tmp_path / "sample.txt"
     sample.write_text("A\vB\n", encoding="utf-8")
