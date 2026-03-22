@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import io
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
@@ -179,6 +180,19 @@ def test_cli_non_utf8_stdin_is_reported_as_binary():
     assert result.stdout == b""
     output = result.stderr.decode("utf-8").strip().splitlines()
     assert output == ["-: is not valid UTF-8 text."]
+
+
+def test_process_stdin_runtime_error_is_reported(monkeypatch, capsys):
+    fake_stdin = io.TextIOWrapper(io.BytesIO(b""), encoding="utf-8")
+    monkeypatch.setattr(sys, "stdin", fake_stdin)
+    monkeypatch.setattr(
+        "nospc.filter_non_standard_whitespace",
+        lambda *args, **kwargs: (_ for _ in ()).throw(BrokenPipeError("broken pipe")),
+    )
+    assert __import__("nospc").process_stdin(False, True) is False
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err.strip().splitlines() == ["-: could not be processed. (broken pipe)"]
 
 
 

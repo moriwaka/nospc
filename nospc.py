@@ -100,8 +100,14 @@ def process_stdin(use_color, use_bracket, ignore_crlf=False):
     except UnicodeDecodeError:
         print("-: is not valid UTF-8 text.", file=sys.stderr)
         return False
+    except Exception as e:
+        print(f"-: could not be processed. ({str(e)})", file=sys.stderr)
+        return False
     finally:
-        stdin.detach()
+        try:
+            stdin.detach()
+        except Exception:
+            pass
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Detect and highlight whitespace characters other than the ASCII space and tab.")
