@@ -83,7 +83,7 @@ def test_standard_whitespace_ignored():
 def test_process_directory_uses_sorted_traversal(monkeypatch):
     calls = []
 
-    def fake_walk(_):
+    def fake_walk(_, onerror=None):
         yield ("root", ["bdir", "adir"], ["b.txt", "a.txt"])
         yield ("root/adir", [], ["1.txt"])
         yield ("root/bdir", [], ["2.txt"])
@@ -105,8 +105,33 @@ def test_process_directory_uses_sorted_traversal(monkeypatch):
 
 
 def test_process_directory_runtime_error_is_reported(monkeypatch, capsys):
-    monkeypatch.setattr(nospc.os, "walk", lambda _: (_ for _ in ()).throw(PermissionError("denied")))
+    monkeypatch.setattr(
+        nospc.os,
+        "walk",
+        lambda _, onerror=None: (_ for _ in ()).throw(PermissionError("denied")),
+    )
     assert nospc.process_directory("blocked", False, False) is False
     captured = capsys.readouterr()
     assert captured.out == ""
     assert captured.err.strip().splitlines() == ["blocked: could not be processed. (denied)"]
+
+
+def test_process_directory_walk_onerror_marks_failure(monkeypatch, capsys):
+    calls = []
+
+    def fake_walk(_directory, onerror=None):
+        onerror(PermissionError("denied subtree"))
+        yield ("root", [], ["ok.txt"])
+
+    def fake_process_file(path, *args, **kwargs):
+        calls.append(path)
+        return True
+
+    monkeypatch.setattr(nospc.os, "walk", fake_walk)
+    monkeypatch.setattr(nospc, "process_file", fake_process_file)
+
+    assert nospc.process_directory("root", False, False) is False
+    captured = capsys.readouterr()
+    assert calls == ["root/ok.txt"]
+    assert captured.out == ""
+    assert captured.err.strip().splitlines() == ["root: could not be processed. (denied subtree)"]

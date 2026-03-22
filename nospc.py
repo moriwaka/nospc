@@ -81,8 +81,13 @@ def process_file(filename, use_color, use_bracket, ignore_crlf=False):
 
 def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
     succeeded = True
+    def handle_walk_error(error):
+        nonlocal succeeded
+        print(f"{directory}: could not be processed. ({str(error)})", file=sys.stderr)
+        succeeded = False
+
     try:
-        for root, dirs, files in os.walk(directory):
+        for root, dirs, files in os.walk(directory, onerror=handle_walk_error):
             dirs.sort()
             for name in sorted(files):
                 filepath = os.path.join(root, name)
