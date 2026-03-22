@@ -119,17 +119,17 @@ def test_cli_crlf_option_ignores_cr_only_in_crlf_endings(tmp_path):
     assert output == [f"{sample}:2:b[U+000D CARRIAGE RETURN]"]
 
 
-def test_cli_color_output_without_termcolor(tmp_path):
-    import importlib.util
-    import pytest
-    if importlib.util.find_spec("termcolor") is not None:
-        pytest.skip("termcolor installed")
+def test_main_color_falls_back_to_brackets_without_termcolor(monkeypatch, tmp_path, capsys):
+    import nospc
+
     sample = tmp_path / "color.txt"
-    sample.write_text("a\u00A0b\n", encoding="utf-8")
-    result = run_cli([str(sample), "--color"])
-    assert result.returncode == 0
-    output = result.stdout.strip().splitlines()
-    assert output == [f"{sample}:1:a\u00A0b"]
+    sample.write_bytes(b"a\x1cb\n")
+    monkeypatch.setattr(nospc, "HAS_TERMCOLOR", False)
+
+    assert nospc.main([str(sample), "--color"]) == 0
+    captured = capsys.readouterr()
+    assert captured.out.strip().splitlines() == [f"{sample}:1:a[U+001C FILE SEPARATOR]b"]
+    assert captured.err == ""
 
 
 def test_cli_recursive_directory_processing(tmp_path):

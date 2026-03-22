@@ -7,7 +7,9 @@ import io
 import argparse
 try:
     from termcolor import colored
+    HAS_TERMCOLOR = True
 except ImportError:  # pragma: no cover - fallback if termcolor is missing
+    HAS_TERMCOLOR = False
     def colored(text, *_, **__):
         return text
 import unicodedata
@@ -138,6 +140,10 @@ def main(argv=None):
     filenames = args.filenames
     use_color = args.color or (sys.stdout.isatty() and not args.bracket)
     use_bracket = args.bracket or (not sys.stdout.isatty() and not args.color)
+    if args.color and not HAS_TERMCOLOR:
+        # Keep problematic characters inspectable when color output is unavailable.
+        use_color = False
+        use_bracket = True
     recursive = args.recursive
     ignore_crlf = args.crlf
     succeeded = True

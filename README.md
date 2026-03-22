@@ -130,7 +130,7 @@ nospc --crlf <filename>
 
 ### Highlighting Options
 
-You can choose between two highlighting methods: color and brackets. By default, if the output is a TTY, color highlighting is enabled. If the output is not a TTY, bracket highlighting is enabled. If `termcolor` is not installed, `--color` falls back to plain text output instead of failing.
+You can choose between two highlighting methods: color and brackets. By default, if the output is a TTY, color highlighting is enabled. If the output is not a TTY, bracket highlighting is enabled. If `termcolor` is not installed, `--color` falls back to bracket highlighting instead of failing or emitting raw control characters.
 
 #### Using Colored Text
 
