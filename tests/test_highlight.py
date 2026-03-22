@@ -40,6 +40,13 @@ def test_zero_width_no_break_space_detected():
     assert highlighted == "a[U+FEFF ZERO WIDTH NO-BREAK SPACE]b"
 
 
+def test_word_joiner_detected():
+    line = "a\u2060b"
+    highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)
+    assert found
+    assert highlighted == "a[U+2060 WORD JOINER]b"
+
+
 def test_unnamed_non_standard_whitespace_detected():
     line = "a\vb"
     highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)

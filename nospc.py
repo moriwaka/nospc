@@ -12,9 +12,10 @@ except ImportError:  # pragma: no cover - fallback if termcolor is missing
         return text
 import unicodedata
 
-all_whitespace_pattern = re.compile(r'[\s\u200B\uFEFF]')
+target_pattern = re.compile(
+    r'[\u000B-\u000D\u001C-\u001F\u0085\u00A0\u1680\u2000-\u200B\u2028\u2029\u202F\u205F\u2060\u3000\uFEFF]'
+)
 
-exclude_chars = [' ', '\t']
 ascii_whitespace_names = {
     '\r': "CARRIAGE RETURN",
     '\v': "VERTICAL TAB",
@@ -37,19 +38,18 @@ def highlight_non_standard_whitespace(line, use_color, use_bracket):
     offset = 0
     found_non_standard = False
     
-    for match in all_whitespace_pattern.finditer(line):
+    for match in target_pattern.finditer(line):
         char = match.group()
-        if char not in exclude_chars:
-            found_non_standard = True
-            start, end = match.span()
-            highlighted_space = line[start:end]
-            if use_bracket:
-                unicode_info = describe_whitespace(char)
-                highlighted_space = f"[{unicode_info}]"
-            if use_color:
-                highlighted_space = colored(highlighted_space, 'red', attrs=['reverse', 'blink'])
-            highlighted_line += line[offset:start] + highlighted_space
-            offset = end
+        found_non_standard = True
+        start, end = match.span()
+        highlighted_space = line[start:end]
+        if use_bracket:
+            unicode_info = describe_whitespace(char)
+            highlighted_space = f"[{unicode_info}]"
+        if use_color:
+            highlighted_space = colored(highlighted_space, 'red', attrs=['reverse', 'blink'])
+        highlighted_line += line[offset:start] + highlighted_space
+        offset = end
     highlighted_line += line[offset:]
     return highlighted_line, found_non_standard
 

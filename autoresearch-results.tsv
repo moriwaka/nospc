@@ -1,3 +1,4 @@
 iteration	goal	baseline	change	verify	result	decision
 1	debug and fix undetected non-standard whitespace	pytest: 20 passed, 1 skipped	Expand whitespace matcher to include U+200B ZERO WIDTH SPACE and add CLI/library regression tests	pytest: 22 passed, 1 skipped	improved: zero-width space now detected and covered	keep
 2	debug and fix undetected BOM-style invisible whitespace	pytest: 22 passed, 1 skipped	Expand whitespace matcher to include U+FEFF ZERO WIDTH NO-BREAK SPACE and add CLI/library regression tests	pytest: 24 passed, 1 skipped	improved: BOM-prefixed UTF-8 text is now detected and covered	keep
+3	debug and fix undetected word joiner characters	pytest: 24 passed, 1 skipped	Expand the matcher to include U+2060 WORD JOINER and add CLI/library regression tests	pytest: 26 passed, 1 skipped	improved: word joiner is now detected and covered	keep
