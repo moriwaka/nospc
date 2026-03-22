@@ -47,6 +47,13 @@ def test_word_joiner_detected():
     assert highlighted == "a[U+2060 WORD JOINER]b"
 
 
+def test_next_line_alias_is_used():
+    line = "a\u0085b"
+    highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)
+    assert found
+    assert highlighted == "a[U+0085 NEXT LINE]b"
+
+
 def test_unnamed_non_standard_whitespace_detected():
     line = "a\vb"
     highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)

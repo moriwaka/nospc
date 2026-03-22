@@ -24,6 +24,7 @@ ascii_whitespace_names = {
     '\x1d': "GROUP SEPARATOR",
     '\x1e': "RECORD SEPARATOR",
     '\x1f': "UNIT SEPARATOR",
+    '\x85': "NEXT LINE",
 }
 
 def describe_whitespace(char):
