@@ -120,7 +120,7 @@ def test_process_directory_walk_onerror_marks_failure(monkeypatch, capsys):
     calls = []
 
     def fake_walk(_directory, onerror=None):
-        onerror(PermissionError("denied subtree"))
+        onerror(PermissionError(13, "denied subtree", "root/blocked"))
         yield ("root", [], ["ok.txt"])
 
     def fake_process_file(path, *args, **kwargs):
@@ -134,4 +134,6 @@ def test_process_directory_walk_onerror_marks_failure(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert calls == ["root/ok.txt"]
     assert captured.out == ""
-    assert captured.err.strip().splitlines() == ["root: could not be processed. (denied subtree)"]
+    assert captured.err.strip().splitlines() == [
+        "root/blocked: could not be processed. ([Errno 13] denied subtree: 'root/blocked')"
+    ]

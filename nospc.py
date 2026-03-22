@@ -83,7 +83,8 @@ def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
     succeeded = True
     def handle_walk_error(error):
         nonlocal succeeded
-        print(f"{directory}: could not be processed. ({str(error)})", file=sys.stderr)
+        target = getattr(error, "filename", None) or directory
+        print(f"{target}: could not be processed. ({str(error)})", file=sys.stderr)
         succeeded = False
 
     try:
