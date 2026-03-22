@@ -73,6 +73,8 @@ def process_file(filename, use_color, use_bracket, ignore_crlf=False):
         with open(filename, 'r', encoding='utf-8', newline='') as file:
             filter_non_standard_whitespace(file, filename, use_color, use_bracket, ignore_crlf)
         return True
+    except BrokenPipeError:
+        raise
     except UnicodeDecodeError:
         print(f"{filename}: is not valid UTF-8 text.", file=sys.stderr)
     except IsADirectoryError:
@@ -95,6 +97,8 @@ def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
             for name in sorted(files):
                 filepath = os.path.join(root, name)
                 succeeded = process_file(filepath, use_color, use_bracket, ignore_crlf) and succeeded
+    except BrokenPipeError:
+        raise
     except Exception as e:
         print(f"{directory}: could not be processed. ({str(e)})", file=sys.stderr)
         return False
@@ -115,6 +119,8 @@ def process_stdin(use_color, use_bracket, ignore_crlf=False):
     try:
         filter_non_standard_whitespace(stdin, "-", use_color, use_bracket, ignore_crlf)
         return True
+    except BrokenPipeError:
+        raise
     except UnicodeDecodeError:
         print("-: is not valid UTF-8 text.", file=sys.stderr)
         return False
@@ -162,5 +168,21 @@ def main(argv=None):
                 succeeded = process_file(filename, use_color, use_bracket, ignore_crlf) and succeeded
     return 0 if succeeded else 1
 
+
+def exit_quietly_on_broken_pipe():
+    devnull_fd = os.open(os.devnull, os.O_WRONLY)
+    try:
+        for stream in (sys.stdout, sys.stderr):
+            try:
+                os.dup2(devnull_fd, stream.fileno())
+            except Exception:
+                pass
+    finally:
+        os.close(devnull_fd)
+    raise SystemExit(1)
+
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except BrokenPipeError:
+        exit_quietly_on_broken_pipe()

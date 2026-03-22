@@ -28,6 +28,22 @@ def run_cli_bytes(args, input_bytes=None):
     )
 
 
+def run_cli_with_closed_pipe(args, pipe_name):
+    popen_kwargs = {
+        "cwd": REPO_ROOT,
+        "text": True,
+        "stdout": subprocess.PIPE,
+        "stderr": subprocess.PIPE,
+    }
+    proc = subprocess.Popen([sys.executable, str(SCRIPT)] + args, **popen_kwargs)
+    closed_stream = getattr(proc, pipe_name)
+    open_stream = proc.stderr if pipe_name == "stdout" else proc.stdout
+    closed_stream.close()
+    remaining_output = open_stream.read()
+    returncode = proc.wait()
+    return returncode, remaining_output
+
+
 def test_cli_file(tmp_path):
     sample = tmp_path / "sample.txt"
     sample.write_text("a\u00A0b\n", encoding="utf-8")
@@ -132,6 +148,25 @@ def test_main_color_falls_back_to_brackets_without_termcolor(monkeypatch, tmp_pa
     assert captured.err == ""
 
 
+def test_cli_quiet_when_stdout_pipe_closes_early(tmp_path):
+    sample = tmp_path / "sample.txt"
+    sample.write_text(("a\u00A0b\n" * 5000), encoding="utf-8")
+
+    returncode, stderr_output = run_cli_with_closed_pipe([str(sample)], "stdout")
+
+    assert returncode == 1
+    assert stderr_output == ""
+
+
+def test_cli_quiet_when_stderr_pipe_closes_early(tmp_path):
+    missing = tmp_path / "missing.txt"
+
+    returncode, stdout_output = run_cli_with_closed_pipe([str(missing)], "stderr")
+
+    assert returncode == 1
+    assert stdout_output == ""
+
+
 def test_cli_recursive_directory_processing(tmp_path):
     root = tmp_path / "dir"
     sub = root / "sub"
@@ -182,17 +217,17 @@ def test_cli_non_utf8_stdin_is_reported_as_binary():
     assert output == ["-: is not valid UTF-8 text."]
 
 
-def test_process_stdin_runtime_error_is_reported(monkeypatch, capsys):
+def test_process_stdin_broken_pipe_propagates(monkeypatch):
+    import pytest
+
     fake_stdin = io.TextIOWrapper(io.BytesIO(b""), encoding="utf-8")
     monkeypatch.setattr(sys, "stdin", fake_stdin)
     monkeypatch.setattr(
         "nospc.filter_non_standard_whitespace",
         lambda *args, **kwargs: (_ for _ in ()).throw(BrokenPipeError("broken pipe")),
     )
-    assert __import__("nospc").process_stdin(False, True) is False
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    assert captured.err.strip().splitlines() == ["-: could not be processed. (broken pipe)"]
+    with pytest.raises(BrokenPipeError, match="broken pipe"):
+        __import__("nospc").process_stdin(False, True)
 
 
 def test_process_stdin_accepts_text_only_stdin(monkeypatch, capsys):

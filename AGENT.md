@@ -43,5 +43,7 @@ pytest
 3.  **Cross-Platform Gracefulness:** 
     *   If `termcolor` is unavailable, it imports a dummy function to allow execution to proceed.
     *   `nospc.py` catches `UnicodeDecodeError`, `IsADirectoryError`, and generic `Exception`s gracefully while processing multiple files, rather than halting execution.
+4.  **Unix Filter Behavior:**
+    *   When stdout or stderr is closed early by a downstream consumer, `nospc` should behave like a typical Unix filter: exit quietly without emitting Python shutdown noise.
 
 When making modifications or adding new features, maintain compatibility with these core behaviors and ensure all exceptions are handled gracefully.
