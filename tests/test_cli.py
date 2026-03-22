@@ -195,6 +195,14 @@ def test_process_stdin_runtime_error_is_reported(monkeypatch, capsys):
     assert captured.err.strip().splitlines() == ["-: could not be processed. (broken pipe)"]
 
 
+def test_process_stdin_accepts_text_only_stdin(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "stdin", io.StringIO("x\u00A0y\n"))
+    assert __import__("nospc").process_stdin(False, True) is True
+    captured = capsys.readouterr()
+    assert captured.out.strip().splitlines() == ["-:1:x[U+00A0 NO-BREAK SPACE]y"]
+    assert captured.err == ""
+
+
 
 def test_cli_nonexistent_path_error(tmp_path):
     missing = tmp_path / "missing.txt"

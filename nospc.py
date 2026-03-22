@@ -89,12 +89,17 @@ def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
     return succeeded
 
 def process_stdin(use_color, use_bracket, ignore_crlf=False):
-    stdin = io.TextIOWrapper(
-        sys.stdin.buffer,
-        encoding='utf-8',
-        errors='strict',
-        newline='',
-    )
+    wrapped_stdin = False
+    if hasattr(sys.stdin, "buffer"):
+        stdin = io.TextIOWrapper(
+            sys.stdin.buffer,
+            encoding='utf-8',
+            errors='strict',
+            newline='',
+        )
+        wrapped_stdin = True
+    else:
+        stdin = sys.stdin
     try:
         filter_non_standard_whitespace(stdin, "-", use_color, use_bracket, ignore_crlf)
         return True
@@ -105,10 +110,11 @@ def process_stdin(use_color, use_bracket, ignore_crlf=False):
         print(f"-: could not be processed. ({str(e)})", file=sys.stderr)
         return False
     finally:
-        try:
-            stdin.detach()
-        except Exception:
-            pass
+        if wrapped_stdin:
+            try:
+                stdin.detach()
+            except Exception:
+                pass
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Detect and highlight whitespace characters other than the ASCII space and tab.")
