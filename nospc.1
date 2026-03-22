@@ -13,6 +13,70 @@ is a utility to detect and highlight whitespace characters other than the ASCII 
 .PP
 Input files are read as UTF-8. Files that cannot be decoded as UTF-8 are reported as not valid UTF-8 text. Line feeds (\en) delimit lines and are not reported; carriage returns (\er) inside those lines are reported. With \fB--crlf\fR, a carriage return is ignored only when it appears immediately before the line feed in a CRLF ending.
 
+.PP
+The target set includes all characters matched by Python \fBstr.isspace()\fR except ASCII space (U+0020), tab (U+0009), and line feed (U+000A), plus these extra invisible format characters: U+200B ZERO WIDTH SPACE, U+2060 WORD JOINER, and U+FEFF ZERO WIDTH NO-BREAK SPACE.
+
+.PP
+The current target characters are:
+.IP \(bu 2
+U+000B VERTICAL TAB
+.IP \(bu 2
+U+000C FORM FEED
+.IP \(bu 2
+U+000D CARRIAGE RETURN
+.IP \(bu 2
+U+001C FILE SEPARATOR
+.IP \(bu 2
+U+001D GROUP SEPARATOR
+.IP \(bu 2
+U+001E RECORD SEPARATOR
+.IP \(bu 2
+U+001F UNIT SEPARATOR
+.IP \(bu 2
+U+0085 NEXT LINE
+.IP \(bu 2
+U+00A0 NO-BREAK SPACE
+.IP \(bu 2
+U+1680 OGHAM SPACE MARK
+.IP \(bu 2
+U+2000 EN QUAD
+.IP \(bu 2
+U+2001 EM QUAD
+.IP \(bu 2
+U+2002 EN SPACE
+.IP \(bu 2
+U+2003 EM SPACE
+.IP \(bu 2
+U+2004 THREE-PER-EM SPACE
+.IP \(bu 2
+U+2005 FOUR-PER-EM SPACE
+.IP \(bu 2
+U+2006 SIX-PER-EM SPACE
+.IP \(bu 2
+U+2007 FIGURE SPACE
+.IP \(bu 2
+U+2008 PUNCTUATION SPACE
+.IP \(bu 2
+U+2009 THIN SPACE
+.IP \(bu 2
+U+200A HAIR SPACE
+.IP \(bu 2
+U+200B ZERO WIDTH SPACE
+.IP \(bu 2
+U+2028 LINE SEPARATOR
+.IP \(bu 2
+U+2029 PARAGRAPH SEPARATOR
+.IP \(bu 2
+U+202F NARROW NO-BREAK SPACE
+.IP \(bu 2
+U+205F MEDIUM MATHEMATICAL SPACE
+.IP \(bu 2
+U+2060 WORD JOINER
+.IP \(bu 2
+U+3000 IDEOGRAPHIC SPACE
+.IP \(bu 2
+U+FEFF ZERO WIDTH NO-BREAK SPACE
+
 .SH OPTIONS
 .TP
 .B \-c, \--color

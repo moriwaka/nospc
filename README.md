@@ -14,6 +14,54 @@ nospc is a utility to detect and highlight whitespace characters other than the 
   - Enclosing characters in brackets with Unicode information
 - Recursive directory processing
 
+## Target Characters
+
+`nospc` reports this target set:
+
+- Unicode whitespace matched by Python `str.isspace()`, except ASCII space (`U+0020`), tab (`U+0009`), and line feed (`U+000A`)
+- Extra invisible format characters that are commonly problematic in text:
+  - `U+200B` ZERO WIDTH SPACE
+  - `U+2060` WORD JOINER
+  - `U+FEFF` ZERO WIDTH NO-BREAK SPACE
+
+In regex form, the current target set is:
+
+```regex
+[\u000B-\u000D\u001C-\u001F\u0085\u00A0\u1680\u2000-\u200B\u2028\u2029\u202F\u205F\u2060\u3000\uFEFF]
+```
+
+This covers:
+
+- `U+000B` VERTICAL TAB
+- `U+000C` FORM FEED
+- `U+000D` CARRIAGE RETURN
+- `U+001C` FILE SEPARATOR
+- `U+001D` GROUP SEPARATOR
+- `U+001E` RECORD SEPARATOR
+- `U+001F` UNIT SEPARATOR
+- `U+0085` NEXT LINE
+- `U+00A0` NO-BREAK SPACE
+- `U+1680` OGHAM SPACE MARK
+- `U+2000` EN QUAD
+- `U+2001` EM QUAD
+- `U+2002` EN SPACE
+- `U+2003` EM SPACE
+- `U+2004` THREE-PER-EM SPACE
+- `U+2005` FOUR-PER-EM SPACE
+- `U+2006` SIX-PER-EM SPACE
+- `U+2007` FIGURE SPACE
+- `U+2008` PUNCTUATION SPACE
+- `U+2009` THIN SPACE
+- `U+200A` HAIR SPACE
+- `U+200B` ZERO WIDTH SPACE
+- `U+2028` LINE SEPARATOR
+- `U+2029` PARAGRAPH SEPARATOR
+- `U+202F` NARROW NO-BREAK SPACE
+- `U+205F` MEDIUM MATHEMATICAL SPACE
+- `U+2060` WORD JOINER
+- `U+3000` IDEOGRAPHIC SPACE
+- `U+FEFF` ZERO WIDTH NO-BREAK SPACE
+
 ## Requirements
 
 - Python 3.x
