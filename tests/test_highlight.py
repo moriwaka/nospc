@@ -26,6 +26,13 @@ def test_multiple_non_standard_whitespaces_detected():
     assert highlighted == "a[U+00A0 NO-BREAK SPACE]b[U+2002 EN SPACE]c"
 
 
+def test_zero_width_space_detected():
+    line = "a\u200Bb"
+    highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)
+    assert found
+    assert highlighted == "a[U+200B ZERO WIDTH SPACE]b"
+
+
 def test_unnamed_non_standard_whitespace_detected():
     line = "a\vb"
     highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)

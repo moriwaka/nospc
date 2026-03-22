@@ -12,7 +12,7 @@ except ImportError:  # pragma: no cover - fallback if termcolor is missing
         return text
 import unicodedata
 
-all_whitespace_pattern = re.compile(r'\s')
+all_whitespace_pattern = re.compile(r'[\s\u200B]')
 
 exclude_chars = [' ', '\t']
 ascii_whitespace_names = {
