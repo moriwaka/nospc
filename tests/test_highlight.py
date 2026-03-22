@@ -102,3 +102,11 @@ def test_process_directory_uses_sorted_traversal(monkeypatch):
         "root/adir/1.txt",
         "root/bdir/2.txt",
     ]
+
+
+def test_process_directory_runtime_error_is_reported(monkeypatch, capsys):
+    monkeypatch.setattr(nospc.os, "walk", lambda _: (_ for _ in ()).throw(PermissionError("denied")))
+    assert nospc.process_directory("blocked", False, False) is False
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err.strip().splitlines() == ["blocked: could not be processed. (denied)"]

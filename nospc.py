@@ -81,11 +81,15 @@ def process_file(filename, use_color, use_bracket, ignore_crlf=False):
 
 def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
     succeeded = True
-    for root, dirs, files in os.walk(directory):
-        dirs.sort()
-        for name in sorted(files):
-            filepath = os.path.join(root, name)
-            succeeded = process_file(filepath, use_color, use_bracket, ignore_crlf) and succeeded
+    try:
+        for root, dirs, files in os.walk(directory):
+            dirs.sort()
+            for name in sorted(files):
+                filepath = os.path.join(root, name)
+                succeeded = process_file(filepath, use_color, use_bracket, ignore_crlf) and succeeded
+    except Exception as e:
+        print(f"{directory}: could not be processed. ({str(e)})", file=sys.stderr)
+        return False
     return succeeded
 
 def process_stdin(use_color, use_bracket, ignore_crlf=False):
