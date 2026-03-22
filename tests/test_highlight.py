@@ -71,3 +71,27 @@ def test_standard_whitespace_ignored():
     highlighted, found = nospc.highlight_non_standard_whitespace(line, False, True)
     assert not found
     assert highlighted == " \t"
+
+
+def test_process_directory_uses_sorted_traversal(monkeypatch):
+    calls = []
+
+    def fake_walk(_):
+        yield ("root", ["bdir", "adir"], ["b.txt", "a.txt"])
+        yield ("root/adir", [], ["1.txt"])
+        yield ("root/bdir", [], ["2.txt"])
+
+    def fake_process_file(path, *args, **kwargs):
+        calls.append(path)
+        return True
+
+    monkeypatch.setattr(nospc.os, "walk", fake_walk)
+    monkeypatch.setattr(nospc, "process_file", fake_process_file)
+
+    assert nospc.process_directory("root", False, False) is True
+    assert calls == [
+        "root/a.txt",
+        "root/b.txt",
+        "root/adir/1.txt",
+        "root/bdir/2.txt",
+    ]

@@ -80,8 +80,9 @@ def process_file(filename, use_color, use_bracket, ignore_crlf=False):
 
 def process_directory(directory, use_color, use_bracket, ignore_crlf=False):
     succeeded = True
-    for root, _, files in os.walk(directory):
-        for name in files:
+    for root, dirs, files in os.walk(directory):
+        dirs.sort()
+        for name in sorted(files):
             filepath = os.path.join(root, name)
             succeeded = process_file(filepath, use_color, use_bracket, ignore_crlf) and succeeded
     return succeeded
