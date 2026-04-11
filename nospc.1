@@ -80,7 +80,7 @@ U+FEFF ZERO WIDTH NO-BREAK SPACE
 .SH OPTIONS
 .TP
 .B \-c, \--color
-Enable color highlighting. If \fBtermcolor\fR is unavailable, output falls back to bracket highlighting.
+Enable color highlighting. If \fBtermcolor\fR is unavailable, output falls back to bracket highlighting. Characters with little or no terminal width (for example format controls and line/paragraph separators) are shown with bracket-style \fBU+XXXX\fR labels in addition to color.
 .TP
 .B \-b, \--bracket
 Enable bracket highlighting with Unicode information.

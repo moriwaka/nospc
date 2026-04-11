@@ -135,6 +135,42 @@ def test_cli_crlf_option_ignores_cr_only_in_crlf_endings(tmp_path):
     assert output == [f"{sample}:2:b[U+000D CARRIAGE RETURN]"]
 
 
+def test_highlight_color_only_substitutes_cf_chars(monkeypatch):
+    import nospc
+
+    monkeypatch.setattr(nospc, "colored", lambda text, *a, **k: f"<{text}>")
+    out, found = nospc.highlight_non_standard_whitespace("a\u200bb", True, False)
+    assert found
+    assert out == "a<[U+200B ZERO WIDTH SPACE]>b"
+
+
+def test_highlight_color_only_substitutes_line_and_paragraph_separator(monkeypatch):
+    import nospc
+
+    monkeypatch.setattr(nospc, "colored", lambda text, *a, **k: f"<{text}>")
+    out, found = nospc.highlight_non_standard_whitespace("x\u2028y\u2029z", True, False)
+    assert found
+    assert out == "x<[U+2028 LINE SEPARATOR]>y<[U+2029 PARAGRAPH SEPARATOR]>z"
+
+
+def test_highlight_color_only_keeps_nbsp_as_character(monkeypatch):
+    import nospc
+
+    monkeypatch.setattr(nospc, "colored", lambda text, *a, **k: f"<{text}>")
+    out, found = nospc.highlight_non_standard_whitespace("a\u00a0b", True, False)
+    assert found
+    assert out == "a<\xa0>b"
+
+
+def test_highlight_color_and_bracket_no_double_label(monkeypatch):
+    import nospc
+
+    monkeypatch.setattr(nospc, "colored", lambda text, *a, **k: f"<{text}>")
+    out, found = nospc.highlight_non_standard_whitespace("a\u200bb", True, True)
+    assert found
+    assert out == "a<[U+200B ZERO WIDTH SPACE]>b"
+
+
 def test_main_color_falls_back_to_brackets_without_termcolor(monkeypatch, tmp_path, capsys):
     import nospc
 

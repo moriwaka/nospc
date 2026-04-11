@@ -36,6 +36,15 @@ def describe_whitespace(char):
         name = ascii_whitespace_names.get(char, "UNNAMED")
     return f"U+{ord(char):04X} {name}"
 
+
+def needs_visible_substitute_when_colored(char):
+    """Whether color-only mode should show bracket-style text for this matched character."""
+    o = ord(char)
+    if o in (0x2028, 0x2029):
+        return True
+    return unicodedata.category(char) == 'Cf'
+
+
 def highlight_non_standard_whitespace(line, use_color, use_bracket):
     highlighted_line = ''
     offset = 0
@@ -47,6 +56,9 @@ def highlight_non_standard_whitespace(line, use_color, use_bracket):
         start, end = match.span()
         highlighted_space = line[start:end]
         if use_bracket:
+            unicode_info = describe_whitespace(char)
+            highlighted_space = f"[{unicode_info}]"
+        elif use_color and needs_visible_substitute_when_colored(char):
             unicode_info = describe_whitespace(char)
             highlighted_space = f"[{unicode_info}]"
         if use_color:

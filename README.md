@@ -140,6 +140,8 @@ To enable color highlighting:
 nospc -c <filename>
 ```
 
+Characters that are effectively invisible in a terminal (for example zero-width spaces and line or paragraph separators) are shown using the same bracket-style `U+XXXX` labels as in bracket mode, then color is applied, so you can still see where they occur.
+
 #### Using Brackets with Unicode Information
 
 To enable bracket highlighting:
